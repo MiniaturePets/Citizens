@@ -17,10 +17,8 @@
 package net.miniaturepets.npcs;
 
 import com.kirelcodes.miniaturepets.loader.PetLoader;
-import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -40,11 +38,11 @@ public class NpcSubcommand {
         }
 
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcName);
-        npc.addTrait(MiniatureNpcTrait.class);
-        npc.getTrait(MiniatureNpcTrait.class).setPetType(petType);
+        npc.addTrait(new MiniatureNpcTrait(petType));
 
         npc.spawn(player.getLocation());
-        ((Citizens) Bukkit.getPluginManager().getPlugin("Citizens")).getNPCSelector().select(player, npc);
+        // This causes a bug where the player has 2 npc selected if they had one previously, I couldn't find a deselect() method
+        //NPCSelector selector = ((Citizens) Bukkit.getPluginManager().getPlugin("Citizens")).getNPCSelector();
 
         return true;
     }

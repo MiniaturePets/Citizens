@@ -28,6 +28,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MiniatureNpcTrait extends Trait {
     final MiniatureNPCs plugin;
@@ -36,9 +37,16 @@ public class MiniatureNpcTrait extends Trait {
 
     @Persist("pet_type") private String petType = "";
 
+    // Used by Citizens when spawning
     public MiniatureNpcTrait() {
         super("miniature_npc");
         plugin = JavaPlugin.getPlugin(MiniatureNPCs.class);
+    }
+
+    public MiniatureNpcTrait(String petType) {
+        super("miniature_npc");
+        plugin = JavaPlugin.getPlugin(MiniatureNPCs.class);
+        setPetType(petType);
     }
 
     @EventHandler
@@ -51,6 +59,15 @@ public class MiniatureNpcTrait extends Trait {
         // Create mob
         MobContainer c = new MobContainer(PetLoader.getPet(petType));
         mob = new Mob(npc.getStoredLocation(), c);
+
+        // Miniature mobs don't always get spawned correctly, this is a workaround that teleports them to the correct location on the next tick.
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                mob.teleport(npc.getStoredLocation());
+            }
+        }.runTaskLater(plugin, 1);
+
         LivingEntity mobNavigator = mob.getNavigator();
         mobNavigator.setAI(false);
         mobNavigator.setGravity(false);
@@ -77,6 +94,7 @@ public class MiniatureNpcTrait extends Trait {
     @Override
     public void onDespawn() {
         mob.remove();
+        mob = null;
     }
 
     // Called on de-attach
@@ -88,7 +106,7 @@ public class MiniatureNpcTrait extends Trait {
 
     public void setPetType(String petType) {
         this.petType = petType;
-        if (npc.isSpawned()) {
+        if (npc != null && npc.isSpawned()) {
             Location l = npc.getEntity().getLocation();
             npc.despawn();
             npc.spawn(l);
