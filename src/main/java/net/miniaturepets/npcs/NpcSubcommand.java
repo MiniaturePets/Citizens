@@ -26,23 +26,20 @@ import org.jetbrains.annotations.NotNull;
 public class NpcSubcommand {
     public static boolean onCommand(@NotNull Player player, @NotNull String label, @NotNull String[] args) {
         if(args.length != 2) {
-            player.sendMessage("Usage: /" + label + " npc <name> <type>");
+            player.sendMessage("Correct Usage: /" + label + " npc <title> <pet>");
             return false;
         }
         String npcName = args[0];
         String petType = args[1];
 
         if (PetLoader.getPet(petType) == null) {
-            player.sendMessage("Pet type not found.");
+            player.sendMessage("The pet in question was not found, please type the name just as it appears in the GUI.");
             return false;
         }
 
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcName);
         npc.addTrait(new MiniatureNpcTrait(petType));
-
         npc.spawn(player.getLocation());
-        // This causes a bug where the player has 2 npc selected if they had one previously, I couldn't find a deselect() method
-        //NPCSelector selector = ((Citizens) Bukkit.getPluginManager().getPlugin("Citizens")).getNPCSelector();
 
         return true;
     }
