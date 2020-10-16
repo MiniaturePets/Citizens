@@ -39,10 +39,9 @@ public class MiniatureNPCs extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        //check if Citizens is present and enabled.
         Plugin citizens = getServer().getPluginManager().getPlugin("Citizens");
         if (citizens == null || !citizens.isEnabled()) {
-            getLogger().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
+            getLogger().log(Level.SEVERE, "Citizens is not found or not enabled. Please make sure you have Citizens 2.x or higher.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -54,11 +53,11 @@ public class MiniatureNPCs extends JavaPlugin {
     }
 
     private void registerNpcSubcommand() {
-        CommandLoader.getMajorCommand().getCommandManager().addCommand(new ExtendedCommandBase("npc", "MiniatureNPCs.AddNpc", "Create a MiniaturePet npc.") {
+        CommandLoader.getMajorCommand().getCommandManager().addCommand(new ExtendedCommandBase("npc", "miniaturepets.npc.create", "Create a Miniature Pets NPC") {
             @Override
             public boolean executeCommand(CommandSender sender, String label, String[] args, boolean isPlayer) {
                 if (!isPlayer) {
-                    sender.sendMessage("Only a player can execute this command.");
+                    sender.sendMessage("This command can only be executed by a player.");
                     return false;
                 }
                 Player player = (Player) sender;
