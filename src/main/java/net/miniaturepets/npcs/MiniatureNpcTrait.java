@@ -56,11 +56,9 @@ public class MiniatureNpcTrait extends Trait {
 
     @Override
     public void onSpawn() {
-        // Create mob
         MobContainer c = new MobContainer(PetLoader.getPet(petType));
         mob = new Mob(npc.getStoredLocation(), c);
 
-        // Miniature mobs don't always get spawned correctly, this is a workaround that teleports them to the correct location on the next tick.
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -73,21 +71,18 @@ public class MiniatureNpcTrait extends Trait {
         mobNavigator.setGravity(false);
         mobNavigator.setInvulnerable(true);
         plugin.registerMob(mob);
-
-        // Turn invisible
+        
         npcEntity = npc.getEntity() instanceof LivingEntity ? ((LivingEntity) npc.getEntity()) : null;
         if (npcEntity == null) {
             npc.removeTrait(MiniatureNpcTrait.class);
-            throw new RuntimeException("MiniatureNPCs trait attached to non-living entity");
+            throw new RuntimeException("The trait has been attached to a non-living entity!");
         }
+        
         npcEntity.setAI(false);
         npcEntity.setGravity(false);
         npcEntity.setCollidable(false);
-
-        // Integer.MAX_VALUE is enough for 68 years of being continuously loaded
         npcEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, true, false));
 
-        // Copy properties from npc into mob
         mob.setCustomName(npcEntity.getName());
     }
 
@@ -97,7 +92,6 @@ public class MiniatureNpcTrait extends Trait {
         mob = null;
     }
 
-    // Called on de-attach
     @Override
     public void onRemove() {
         mob.remove();
