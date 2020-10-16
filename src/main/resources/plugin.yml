@@ -1,6 +1,6 @@
 name: "MiniaturePetsNPCS"
 version: "1.0"
-author: SuperCuber
+author: Various Contributors
 main: net.miniaturepets.npcs.MiniatureNPCs
 api-version: "1.13"
 depend: ["Citizens", "MiniaturePets"]
