@@ -27,15 +27,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class MiniatureNPCs extends JavaPlugin {
 
-    private final Vector<Mob> mobs = new Vector<>();
+    private final Set<Mob> mobs = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -78,9 +76,7 @@ public class MiniatureNPCs extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (Mob mob : mobs) {
-            mob.remove();
-        }
+        mobs.forEach(Mob::remove);
         mobs.clear();
     }
 
