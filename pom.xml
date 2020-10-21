@@ -22,11 +22,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.kirelcodes.miniaturepets</groupId>
+            <groupId>com.kirelcodes</groupId>
             <artifactId>MiniaturePets</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>/home/amit/src/java/jars/MiniaturePets.jar</systemPath>
+            <version>2.5.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
