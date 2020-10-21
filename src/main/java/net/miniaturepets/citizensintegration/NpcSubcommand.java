@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package net.miniaturepets.npcs;
+package net.miniaturepets.citizensintegration;
 
 import com.kirelcodes.miniaturepets.loader.PetLoader;
 import net.citizensnpcs.api.CitizensAPI;

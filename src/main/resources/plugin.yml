@@ -1,7 +1,8 @@
-name: "MiniaturePetsNPCS"
+name: "citizens-integration"
 version: "1.0"
-author: Various Contributors
-main: net.miniaturepets.npcs.MiniatureNPCs
+author: SuperCuber
+authors: [Voigon]
+main: net.miniaturepets.citizensintegration.MiniatureNPCs
 api-version: "1.13"
 depend: ["Citizens", "MiniaturePets"]
 commands:

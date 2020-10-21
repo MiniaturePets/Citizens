@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package net.miniaturepets.npcs;
+package net.miniaturepets.citizensintegration;
 
 import com.kirelcodes.miniaturepets.commands.subcommands.CommandLoader;
 import com.kirelcodes.miniaturepets.commands.ExtendedCommandBase;
