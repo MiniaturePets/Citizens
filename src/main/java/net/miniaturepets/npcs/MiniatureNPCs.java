@@ -16,7 +16,7 @@
 
 package net.miniaturepets.npcs;
 
-import com.kirelcodes.miniaturepets.commands.CommandLoader;
+import com.kirelcodes.miniaturepets.commands.subcommands.CommandLoader;
 import com.kirelcodes.miniaturepets.commands.ExtendedCommandBase;
 import com.kirelcodes.miniaturepets.loader.PetLoader;
 import com.kirelcodes.miniaturepets.mob.Mob;
