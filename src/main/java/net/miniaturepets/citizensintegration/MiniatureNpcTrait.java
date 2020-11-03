@@ -50,8 +50,10 @@ public class MiniatureNpcTrait extends Trait {
     }
 
     @EventHandler
-    public void onTeleport(NPCTeleportEvent e) {
-        mob.teleport(e.getTo());
+    public void onTeleport(NPCTeleportEvent event) {
+        if (event.getNPC().getEntity().equals(npcEntity))
+            mob.teleport(event.getTo());
+
     }
 
     @Override
