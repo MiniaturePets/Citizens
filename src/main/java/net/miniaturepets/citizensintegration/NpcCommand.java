@@ -16,15 +16,35 @@
 
 package net.miniaturepets.citizensintegration;
 
+import com.kirelcodes.miniaturepets.commands.ExtendedCommandBase;
+import com.kirelcodes.miniaturepets.commands.subcommands.CommandLoader;
 import com.kirelcodes.miniaturepets.loader.PetLoader;
+import com.kirelcodes.miniaturepets.pets.PetContainer;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class NpcSubcommand {
-    public static boolean onCommand(@NotNull Player player, @NotNull String label, @NotNull String[] args) {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/* package-private */ class NpcCommand extends ExtendedCommandBase {
+
+    public NpcCommand() {
+        super("npc", "miniaturepets.npc.create", "Create a Miniature Pets NPC");
+    }
+
+    @Override
+    public boolean executeCommand(CommandSender sender, String label, String[] args, boolean isPlayer) {
+        if (!isPlayer) {
+            sender.sendMessage("This command can only be executed by a player.");
+            return false;
+        }
+        Player player = (Player) sender;
+
         if(args.length != 2) {
             player.sendMessage("Correct Usage: /" + label + " npc <title> <pet>");
             return false;
@@ -42,5 +62,14 @@ public class NpcSubcommand {
         npc.spawn(player.getLocation());
 
         return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String label, String[] args) {
+        if (args.length == 2) {
+            return PetLoader.getPets().stream().map(PetContainer::getType).filter((type) -> type.startsWith(args[1])).collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

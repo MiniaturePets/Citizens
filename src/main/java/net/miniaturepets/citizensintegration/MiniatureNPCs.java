@@ -17,23 +17,17 @@
 package net.miniaturepets.citizensintegration;
 
 import com.kirelcodes.miniaturepets.commands.subcommands.CommandLoader;
-import com.kirelcodes.miniaturepets.commands.ExtendedCommandBase;
-import com.kirelcodes.miniaturepets.loader.PetLoader;
-import com.kirelcodes.miniaturepets.mob.Mob;
-import com.kirelcodes.miniaturepets.pets.PetContainer;
+import lombok.Getter;
 import net.citizensnpcs.api.CitizensAPI;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public class MiniatureNPCs extends JavaPlugin {
 
-    private final Set<Mob> mobs = new HashSet<>();
+    @Getter
+    MobManager mobManager;
 
     @Override
     public void onEnable() {
@@ -44,43 +38,17 @@ public class MiniatureNPCs extends JavaPlugin {
             return;
         }
 
-        registerNpcSubcommand();
+        mobManager = new MobManager();
+
+        CommandLoader.getMajorCommand().getCommandManager().addCommand(new NpcCommand());
 
         // Register trait with Citizens
         CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(MiniatureNpcTrait.class).withName("miniature_npc"));
     }
 
-    private void registerNpcSubcommand() {
-        CommandLoader.getMajorCommand().getCommandManager().addCommand(new ExtendedCommandBase("npc", "miniaturepets.npc.create", "Create a Miniature Pets NPC") {
-            @Override
-            public boolean executeCommand(CommandSender sender, String label, String[] args, boolean isPlayer) {
-                if (!isPlayer) {
-                    sender.sendMessage("This command can only be executed by a player.");
-                    return false;
-                }
-                Player player = (Player) sender;
-
-                return NpcSubcommand.onCommand(player, CommandLoader.getMajorCommand().getLabel(), args);
-            }
-
-            @Override
-            public List<String> tabComplete(CommandSender sender, String label, String[] args) {
-                if (args.length == 2) {
-                    return PetLoader.getPets().stream().map(PetContainer::getType).filter((type) -> type.startsWith(args[1])).collect(Collectors.toList());
-                } else {
-                    return new ArrayList<>();
-                }
-            }
-        });
-    }
-
     @Override
     public void onDisable() {
-        mobs.forEach(Mob::remove);
-        mobs.clear();
+        mobManager.removeAll();
     }
 
-    void registerMob(Mob m) {
-        mobs.add(m);
-    }
 }
