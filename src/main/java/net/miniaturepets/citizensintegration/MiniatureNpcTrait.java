@@ -19,19 +19,26 @@ package net.miniaturepets.citizensintegration;
 import com.kirelcodes.miniaturepets.loader.PetLoader;
 import com.kirelcodes.miniaturepets.mob.Mob;
 import com.kirelcodes.miniaturepets.mob.MobContainer;
+import com.kirelcodes.miniaturepets.mob.MobHolder;
+import com.kirelcodes.miniaturepets.utils.APIUtils;
+import lombok.Getter;
 import net.citizensnpcs.api.event.NPCTeleportEvent;
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class MiniatureNpcTrait extends Trait {
+public class MiniatureNpcTrait extends Trait implements MobHolder {
+
+    @Getter
     final MiniatureNPCs plugin;
+
     private Mob mob;
     private LivingEntity npcEntity;
 
@@ -50,14 +57,17 @@ public class MiniatureNpcTrait extends Trait {
     }
 
     @EventHandler
-    public void onTeleport(NPCTeleportEvent e) {
-        mob.teleport(e.getTo());
+    public void onTeleport(NPCTeleportEvent event) {
+        if (event.getNPC().getEntity().equals(npcEntity))
+            mob.teleport(event.getTo());
+
     }
 
     @Override
     public void onSpawn() {
         MobContainer c = new MobContainer(PetLoader.getPet(petType));
         mob = new Mob(npc.getStoredLocation(), c);
+        mob.setMobHolder(this);
 
         new BukkitRunnable() {
             @Override
@@ -70,7 +80,7 @@ public class MiniatureNpcTrait extends Trait {
         mobNavigator.setAI(false);
         mobNavigator.setGravity(false);
         mobNavigator.setInvulnerable(true);
-        plugin.registerMob(mob);
+        plugin.getMobManager().registerMob(mob);
         
         npcEntity = npc.getEntity() instanceof LivingEntity ? ((LivingEntity) npc.getEntity()) : null;
         if (npcEntity == null) {
@@ -84,6 +94,7 @@ public class MiniatureNpcTrait extends Trait {
         npcEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, true, false));
 
         mob.setCustomName(npcEntity.getName());
+
     }
 
     @Override
@@ -106,4 +117,5 @@ public class MiniatureNpcTrait extends Trait {
             npc.spawn(l);
         }
     }
+
 }
