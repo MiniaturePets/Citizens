@@ -1,5 +1,5 @@
 name: "citizens-integration"
-version: "1.1"
+version: "1.2"
 author: SuperCuber
 authors: [Voigon]
 main: net.miniaturepets.citizensintegration.MiniatureNPCs
