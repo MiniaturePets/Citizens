@@ -20,6 +20,8 @@ import com.kirelcodes.miniaturepets.loader.PetLoader;
 import com.kirelcodes.miniaturepets.mob.Mob;
 import com.kirelcodes.miniaturepets.mob.MobContainer;
 import com.kirelcodes.miniaturepets.mob.MobHolder;
+import com.kirelcodes.miniaturepets.mob.metadata.EntityMetadata;
+import com.kirelcodes.miniaturepets.pets.PetContainer;
 import com.kirelcodes.miniaturepets.utils.APIUtils;
 import lombok.Getter;
 import net.citizensnpcs.api.event.NPCTeleportEvent;
@@ -65,9 +67,14 @@ public class MiniatureNpcTrait extends Trait implements MobHolder {
 
     @Override
     public void onSpawn() {
-        MobContainer c = new MobContainer(PetLoader.getPet(petType));
+        PetContainer petContainer = PetLoader.getPet(petType);
+        MobContainer c = new MobContainer(petContainer);
         mob = new Mob(npc.getStoredLocation(), c);
         mob.setMobHolder(this);
+
+        EntityMetadata<?> entityMetadata = petContainer.getEntityMetadata();
+        if (entityMetadata != null)
+            entityMetadata.applyMob(mob);
 
         new BukkitRunnable() {
             @Override

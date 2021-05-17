@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.kirelcodes</groupId>
             <artifactId>MiniaturePets</artifactId>
-            <version>2.5.2</version>
+            <version>2.5.7</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
